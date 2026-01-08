@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TUFF - Secure Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2ecc71;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #27ae60;
+        }
+
+        .error {
+            margin-top: 15px;
+            color: #e74c3c;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card">
+    <h2><i class="fas fa-leaf"></i> TUFF Login</h2>
+
+    <form id="loginForm">
+        <label>Email</label>
+        <input type="email" id="email" required placeholder="demo@tuff.com">
+
+        <label>Password</label>
+        <input type="password" id="password" required placeholder="1234">
+
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="error" id="errorMsg">Invalid credentials</div>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+            const res = await fetch("https://scr-backend-kmfn.onrender.com", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                sessionStorage.setItem("tuff_token", "logged_in");
+                window.location.href = "dashboard.html";
+            } else {
+                document.getElementById("errorMsg").style.display = "block";
+            }
+        } catch (err) {
+            document.getElementById("errorMsg").innerText = "Server error";
+            document.getElementById("errorMsg").style.display = "block";
+        }
+    });
+</script>
+
+</body>
+</html>

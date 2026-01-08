@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TUFF - Smart Irrigation System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Kannada:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary-blue: #3498db;
+            --primary-green: #2ecc71;
+            --dark-text: #2c3e50;
+            --light-bg: #f4f7f6;
+            --white: #ffffff;
+            --danger: #e74c3c;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Open Sans', 'Noto Sans Kannada', sans-serif; 
+            color: var(--dark-text); 
+            background-color: var(--white); 
+            overflow-x: hidden; 
+        }
+        h1, h2, h3, h4 { font-family: 'Poppins', 'Noto Sans Kannada', sans-serif; font-weight: 700; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; background: rgba(255, 255, 255, 0.95);
+            padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo { font-size: 1.8rem; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .logo span { color: var(--primary-blue); }
+        .logo i { color: var(--primary-green); }
+        
+        .nav-right { display: flex; align-items: center; gap: 2rem; }
+        
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
+        .nav-links a:hover { color: var(--primary-blue); }
+
+        /* Language Selector */
+        .lang-select {
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+            font-family: inherit;
+            font-weight: 600;
+            color: var(--dark-text);
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') center/cover;
+            display: flex; align-items: center; justify-content: center; text-align: center; color: white; position: relative;
+        }
+        .hero-content { max-width: 800px; padding: 20px; animation: fadeUp 1s ease-out; }
+        .hero h1 { font-size: 3.5rem; margin-bottom: 0.5rem; }
+        .tagline { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; backdrop-filter: blur(5px); display: inline-block; margin-bottom: 1rem; border: 1px solid rgba(255,255,255,0.3); }
+        
+        /* DASHBOARD CTA CARD */
+        .dashboard-cta {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-top: 2rem;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+            display: inline-block;
+            text-align: left;
+            min-width: 300px;
+        }
+        .dashboard-cta:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: var(--primary-green);
+        }
+        .dashboard-cta h3 { color: var(--primary-green); display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+        .dashboard-cta p { font-size: 0.9rem; color: #ddd; margin-bottom: 15px; }
+        .dashboard-link { color: white; font-weight: bold; text-decoration: underline; }
+
+        /* --- SECTIONS --- */
+        section { padding: 5rem 10%; }
+        .section-title { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; }
+        
+        .problem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .problem-card { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); text-align: center; }
+        .problem-card i { font-size: 3rem; color: var(--danger); margin-bottom: 1rem; }
+
+        /* Solution Visuals */
+        .layer-stack { width: 100%; height: 300px; border-radius: 20px; overflow: hidden; position: relative; }
+        .layer { display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .l-soil { height: 30%; background: #5d4037; }
+        .l-sand { height: 40%; background: #e0c097; }
+        .l-gravel { height: 30%; background: #95a5a6; }
+
+        /* Team */
+        .team-container { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+        .team-member { text-align: center; width: 250px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: transform 0.3s;}
+        .team-member:hover { transform: translateY(-5px); }
+        .team-avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--primary-blue); margin: 0 auto 1rem; overflow: hidden; }
+        .team-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .team-member h4 { margin-bottom: 5px; color: var(--dark-text); }
+        .team-member p { color: var(--primary-green); font-weight: 600; font-size: 0.9rem; }
+
+        /* Footer */
+        footer { background: #1a252f; color: white; padding: 2rem; text-align: center; }
+
+        /* Animations */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo"><i class="fas fa-leaf"></i>&nbsp;TUFF<span>.</span></div>
+        
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="#hero" data-i18n="nav_home">Home</a>
+                <a href="#problem" data-i18n="nav_problem">Problem</a>
+                <a href="#solution" data-i18n="nav_solution">Solution</a>
+                <a href="#team" data-i18n="nav_team">Team</a>
+                <a href="login.html" style="color: var(--primary-green); border: 1px solid var(--primary-green); padding: 5px 15px; border-radius: 20px;" data-i18n="nav_login">Login</a>
+            </div>
+            
+            <select class="lang-select" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                <option value="hi">हिंदी (Hindi)</option>
+            </select>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero">
+        <div class="hero-content">
+            <div class="tagline" data-i18n="hero_tagline">Bone to Backbone</div>
+            <h1 data-i18n="hero_title">Smart Irrigation<br>Future Ready</h1>
+            <h2 style="font-size: 1.2rem; font-weight: 300; margin-bottom: 2rem; color: #eee;" data-i18n="hero_subtitle">"Today Every drop counts, but Tomorrow Every Drop Costs"</h2>
+            
+            <a href="login.html">
+                <div class="dashboard-cta">
+                    <h3><i class="fas fa-chart-line"></i> <span data-i18n="cta_title">Live Farm Status</span></h3>
+                    <p data-i18n="cta_desc">Click here to access Motor Controls, Sensor Data & Recommendations.</p>
+                    <div class="dashboard-link"><span data-i18n="cta_link">Go to Dashboard</span> &rarr;</div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section id="problem">
+        <h2 class="section-title" data-i18n="nav_problem">The Problem</h2>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <i class="fas fa-water"></i>
+                <h3 data-i18n="prob_1_title">Water Shortage</h3>
+                <p data-i18n="prob_1_desc">Rice cultivation traditionally requires 3000L of water for 1kg of paddy.</p>
+            </div>
+            <div class="problem-card">
+                <i class="fas fa-cloud-sun-rain"></i>
+                <h3 data-i18n="prob_2_title">Unpredictable Climate</h3>
+                <p data-i18n="prob_2_desc">Indian agriculture is a "Gamble with Monsoons".</p>
+            </div>
+            <div class="problem-card">
+                <i class="fas fa-tint-slash"></i>
+                <h3 data-i18n="prob_3_title">Wastage</h3>
+                <p data-i18n="prob_3_desc">Traditional furrow irrigation wastes massive amounts of water.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="solution">
+        <h2 class="section-title" data-i18n="nav_solution">The Solution</h2>
+        <div style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: center; justify-content: center;">
+            <div style="flex: 1; min-width: 300px;">
+                <ul style="line-height: 2;">
+                    <li><i class="fas fa-check" style="color:var(--primary-green)"></i> <strong data-i18n="sol_layer1">Layer 1:</strong> <span data-i18n="sol_layer1_desc">Alluvial Soil for Roots.</span></li>
+                    <li><i class="fas fa-check" style="color:var(--primary-green)"></i> <strong data-i18n="sol_layer2">Layer 2:</strong> <span data-i18n="sol_layer2_desc">Sand Filter.</span></li>
+                    <li><i class="fas fa-check" style="color:var(--primary-green)"></i> <strong data-i18n="sol_layer3">Layer 3:</strong> <span data-i18n="sol_layer3_desc">Gravel & Pipe Recycling.</span></li>
+                </ul>
+                <br>
+                <p><strong data-i18n="sol_impact">Impact:</strong> <span data-i18n="sol_impact_desc">Saves 30% water (2.5L Liters/acre).</span></p>
+            </div>
+            <div style="flex: 1; min-width: 300px;">
+                <div class="layer-stack">
+                    <div class="layer l-soil" data-i18n="visual_soil">Soil</div>
+                    <div class="layer l-sand" data-i18n="visual_sand">Sand</div>
+                    <div class="layer l-gravel" data-i18n="visual_gravel">Gravel + Pipe</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="team">
+        <h2 class="section-title" data-i18n="nav_team">Team</h2>
+        <div class="team-container">
+            <div class="team-member">
+                <div class="team-avatar">
+                    <img src="WhatsApp Image 2025-12-20 at 23.49.15.jpeg" alt="Abhishek S Hebbar">
+                </div>
+                <h4>Abhishek S Hebbar</h4>
+                <p data-i18n="role_lead">Team Lead</p>
+            </div>
+
+            <div class="team-member">
+                <div class="team-avatar">
+                    <img src="WhatsApp Image 2025-12-20 at 23.53.50.jpeg" alt="Venkata Vinuthna M">
+                </div>
+                <h4>Venkata Vinuthna M</h4>
+                <p data-i18n="role_research">Research</p>
+            </div>
+
+            <div class="team-member">
+                <div class="team-avatar">
+                    <img src="WhatsApp Image 2025-12-20 at 23.49.16.jpeg" alt="K E Kavya">
+                </div>
+                <h4>K E Kavya</h4>
+                <p data-i18n="role_strategy">Strategy</p>
+            </div>
+
+            <div class="team-member">
+                <div class="team-avatar">
+                    <img src="WhatsApp Image 2025-12-20 at 23.43.22.jpeg" alt="Tejas S">
+                </div>
+                <h4>Tejas S</h4>
+                <p data-i18n="role_tech">Tech Lead</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 TUFF Smart Irrigation.</p>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                nav_home: "Home",
+                nav_problem: "Problem",
+                nav_solution: "Solution",
+                nav_team: "Team",
+                nav_login: "Login",
+                hero_tagline: "Bone to Backbone",
+                hero_title: "Smart Irrigation<br>Future Ready",
+                hero_subtitle: "\"Today Every drop counts, but Tomorrow Every Drop Costs\"",
+                cta_title: "Live Farm Status",
+                cta_desc: "Click here to access Motor Controls, Sensor Data & Recommendations.",
+                cta_link: "Go to Dashboard",
+                prob_1_title: "Water Shortage",
+                prob_1_desc: "Rice cultivation traditionally requires 3000L of water for 1kg of paddy.",
+                prob_2_title: "Unpredictable Climate",
+                prob_2_desc: "Indian agriculture is a \"Gamble with Monsoons\".",
+                prob_3_title: "Wastage",
+                prob_3_desc: "Traditional furrow irrigation wastes massive amounts of water.",
+                sol_layer1: "Layer 1:",
+                sol_layer1_desc: "Alluvial Soil for Roots.",
+                sol_layer2: "Layer 2:",
+                sol_layer2_desc: "Sand Filter.",
+                sol_layer3: "Layer 3:",
+                sol_layer3_desc: "Gravel & Pipe Recycling.",
+                sol_impact: "Impact:",
+                sol_impact_desc: "Saves 30% water (2.5L Liters/acre).",
+                visual_soil: "Soil",
+                visual_sand: "Sand",
+                visual_gravel: "Gravel + Pipe",
+                role_lead: "Team Lead",
+                role_research: "Research",
+                role_strategy: "Strategy",
+                role_tech: "Tech Lead"
+            },
+            kn: {
+                nav_home: "ಮುಖಪುಟ",
+                nav_problem: "ಸಮಸ್ಯೆ",
+                nav_solution: "ಪರಿಹಾರ",
+                nav_team: "ತಂಡ",
+                nav_login: "ಲಾಗಿನ್",
+                hero_tagline: "ಬೋನ್ ಟು ಬ್ಯಾಕ್‌ಬೋನ್",
+                hero_title: "ಸ್ಮಾರ್ಟ್ ನೀರಾವರಿ<br>ಉತ್ತಮ ಭವಿಷ್ಯಕ್ಕಾಗಿ",
+                hero_subtitle: "\"ಇಂದು ಪ್ರತಿ ಹನಿ ಮುಖ್ಯ, ಆದರೆ ನಾಳೆ ಪ್ರತಿ ಹನಿಗೆ ಬೆಲೆ ತೆರಬೇಕಾಗುತ್ತದೆ\"",
+                cta_title: "ಲೈವ್ ಫಾರ್ಮ್ ಸ್ಥಿತಿ",
+                cta_desc: "ಮೋಟಾರ್ ನಿಯಂತ್ರಣ ಮತ್ತು ಸೆನ್ಸಾರ್ ಮಾಹಿತಿಗಾಗಿ ಇಲ್ಲಿ ಕ್ಲಿಕ್ ಮಾಡಿ.",
+                cta_link: "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಹೋಗಿ",
+                prob_1_title: "ನೀರಿನ ಕೊರತೆ",
+                prob_1_desc: "1 ಕೆಜಿ ಭತ್ತ ಬೆಳೆಯಲು ಸಾಂಪ್ರದಾಯಿಕವಾಗಿ 3000 ಲೀಟರ್ ನೀರು ಬೇಕಾಗುತ್ತದೆ.",
+                prob_2_title: "ಅನಿರೀಕ್ಷಿತ ಹವಾಮಾನ",
+                prob_2_desc: "ಭಾರತೀಯ ಕೃಷಿಯು ಮುಂಗಾರು ಮಳೆಯೊಂದಿಗೆ ಜೂಜಾಟದಂತಾಗಿದೆ.",
+                prob_3_title: "ತ್ಯಾಜ್ಯ",
+                prob_3_desc: "ಸಾಂಪ್ರದಾಯಿಕ ನೀರಾವರಿ ಪದ್ಧತಿಯು ಅಪಾರ ಪ್ರಮಾಣದ ನೀರನ್ನು ವ್ಯರ್ಥ ಮಾಡುತ್ತದೆ.",
+                sol_layer1: "ಪದರ 1:",
+                sol_layer1_desc: "ಬೇರುಗಳಿಗಾಗಿ ಮೆಕ್ಕಲು ಮಣ್ಣು.",
+                sol_layer2: "ಪದರ 2:",
+                sol_layer2_desc: "ಮರಳು ಶೋಧಕ (Sand Filter).",
+                sol_layer3: "ಪದರ 3:",
+                sol_layer3_desc: "ಜಲ್ಲಿ ಮತ್ತು ಪೈಪ್ ಮರುಬಳಕೆ.",
+                sol_impact: "ಪರಿಣಾಮ:",
+                sol_impact_desc: "30% ನೀರನ್ನು ಉಳಿಸುತ್ತದೆ (2.5 ಲಕ್ಷ ಲೀಟರ್/ಎಕರೆ).",
+                visual_soil: "ಮಣ್ಣು",
+                visual_sand: "ಮರಳು",
+                visual_gravel: "ಜಲ್ಲಿ + ಪೈಪ್",
+                role_lead: "ತಂಡದ ಮುಖ್ಯಸ್ಥ",
+                role_research: "ಸಂಶೋಧನೆ",
+                role_strategy: "ತಂತ್ರಗಾರಿಕೆ",
+                role_tech: "ತಾಂತ್ರಿಕ ಮುಖ್ಯಸ್ಥ"
+            },
+            hi: {
+                nav_home: "होम",
+                nav_problem: "समस्या",
+                nav_solution: "समाधान",
+                nav_team: "टीम",
+                nav_login: "लॉगिन",
+                hero_tagline: "बोन टू बैकबोन",
+                hero_title: "स्मार्ट सिंचाई<br>उज्ज्वल भविष्य",
+                hero_subtitle: "\"आज हर बूंद मायने रखती है, लेकिन कल हर बूंद की कीमत होगी\"",
+                cta_title: "लाइव फार्म स्थिति",
+                cta_desc: "मोटर नियंत्रण और सेंसर डेटा के लिए यहाँ क्लिक करें।",
+                cta_link: "डैशबोर्ड पर जाएं",
+                prob_1_title: "पानी की कमी",
+                prob_1_desc: "1 किलो धान उगाने के लिए पारंपरिक रूप से 3000 लीटर पानी की आवश्यकता होती है।",
+                prob_2_title: "अनिश्चित जलवायु",
+                prob_2_desc: "भारतीय कृषि मानसून के साथ जुए की तरह है।",
+                prob_3_title: "बर्बादी",
+                prob_3_desc: "पारंपरिक सिंचाई से भारी मात्रा में पानी बर्बाद होता है।",
+                sol_layer1: "परत 1:",
+                sol_layer1_desc: "जड़ों के लिए जलोढ़ मिट्टी।",
+                sol_layer2: "परत 2:",
+                sol_layer2_desc: "रेत फिल्टर।",
+                sol_layer3: "परत 3:",
+                sol_layer3_desc: "बजरी और पाइप रीसाइक्लिंग।",
+                sol_impact: "प्रभाव:",
+                sol_impact_desc: "30% पानी बचाता है (2.5 लाख लीटर/एकड़)।",
+                visual_soil: "मिट्टी",
+                visual_sand: "रेत",
+                visual_gravel: "बजरी + पाइप",
+                role_lead: "टीम लीड",
+                role_research: "अनुसंधान",
+                role_strategy: "रणनीति",
+                role_tech: "तकनीकी लीड"
+            }
+        };
+
+        function changeLanguage(lang) {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

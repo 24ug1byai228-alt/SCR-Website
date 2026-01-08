@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TUFF – Smart Irrigation Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script>
+        // LOGIN PROTECTION
+        if (sessionStorage.getItem("tuff_token") !== "logged_in") {
+            window.location.href = "login.html";
+        }
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #1b5e20;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .logout {
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .container {
+            padding: 40px;
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1b5e20;
+        }
+
+        .unit {
+            font-size: 1rem;
+            color: #888;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .on { color: #2ecc71; }
+        .off { color: #e74c3c; }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1><i class="fas fa-leaf"></i> TUFF – Farm Dashboard</h1>
+    <div class="logout" onclick="logout()">Logout</div>
+</header>
+
+<div class="container">
+    <h2>Live Farm Status</h2>
+
+    <div class="grid">
+
+        <div class="card">
+            <h3>Soil Moisture</h3>
+            <div class="value" id="soil">-- <span class="unit">%</span></div>
+        </div>
+
+        <div class="card">
+            <h3>Temperature</h3>
+            <div class="value" id="temp">-- <span class="unit">°C</span></div>
+        </div>
+
+        <div class="card">
+            <h3>Soil pH</h3>
+            <div class="value" id="ph">--</div>
+        </div>
+
+        <div class="card">
+            <h3>Water Level</h3>
+            <div class="value" id="water">-- <span class="unit">%</span></div>
+        </div>
+
+        <div class="card">
+            <h3>Motor Status</h3>
+            <div class="value status" id="motor">--</div>
+        </div>
+
+    </div>
+
+    <footer>
+        Smart Irrigation System | Bone to Backbone Project
+    </footer>
+</div>
+
+<script>
+    function logout() {
+        sessionStorage.removeItem("tuff_token");
+        window.location.href = "login.html";
+    }
+
+    async function loadDashboard() {
+        try {
+            const response = await fetch("https://scr-backend-kmfn.onrender.com");
+            const data = await response.json();
+
+            document.getElementById("soil").innerHTML =
+                data.soilMoisture + " <span class='unit'>%</span>";
+
+            document.getElementById("temp").innerHTML =
+                data.temperature + " <span class='unit'>°C</span>";
+
+            document.getElementById("ph").innerText = data.ph;
+
+            document.getElementById("water").innerHTML =
+                data.waterLevel + " <span class='unit'>%</span>";
+
+            const motorEl = document.getElementById("motor");
+            motorEl.innerText = data.motorStatus;
+
+            if (data.motorStatus === "ON") {
+                motorEl.classList.add("on");
+                motorEl.classList.remove("off");
+            } else {
+                motorEl.classList.add("off");
+                motorEl.classList.remove("on");
+            }
+
+        } catch (error) {
+            console.error("Error loading data");
+        }
+    }
+
+    loadDashboard();
+    setInterval(loadDashboard, 5000);
+</script>
+
+</body>
+</html>
