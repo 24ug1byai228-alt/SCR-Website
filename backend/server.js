@@ -5,12 +5,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ROUTE WITHOUT FIREBASE
+// BASE ROUTE
 app.get("/", (req, res) => {
     res.send("SCR Backend Running");
 });
 
-// TEST ROUTE
+// TEST API ROUTE (NO FIREBASE)
 app.get("/api/test", (req, res) => {
     res.json({ status: "API OK" });
 });
