@@ -1,25 +1,23 @@
 const express = require("express");
 const cors = require("cors");
 
+const authRoutes = require("./routes/auth");
+const dataRoutes = require("./routes/data");
+
 const app = express();
+
 app.use(cors());
+app.use(express.json());
 
-let data = {
-  soilMoisture: 45,
-  waterLevel: 70,
-  pumpStatus: "ON"
-};
+// ROUTES
+app.use("/api/auth", authRoutes);
+app.use("/api/data", dataRoutes);
 
-setInterval(() => {
-  data.soilMoisture = Math.floor(Math.random() * 100);
-  data.waterLevel = Math.floor(Math.random() * 100);
-  data.pumpStatus = data.soilMoisture < 40 ? "ON" : "OFF";
-}, 5000);
-
-app.get("/api/data", (req, res) => {
-  res.json(data);
+app.get("/", (req, res) => {
+    res.send("SCR Backend Running");
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log("Server running on port " + PORT);
 });
